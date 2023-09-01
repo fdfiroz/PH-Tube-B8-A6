@@ -1,3 +1,4 @@
+
 const handleCategory = async () => {
   const response = await fetch(
     "https://openapi.programming-hero.com/api/videos/categories"
@@ -10,14 +11,14 @@ const handleCategory = async () => {
     tab.innerHTML = `<button onclick="handleCategoryClick(${category?.category_id})" class="btn-sm text-black hover:bg-rose-600 hover:text-white focus:text-white focus:bg-rose-600 join-item active:bg-rose-600" >${category?.category}</button>`;
     tabContainer.appendChild(tab);
   });
+  handleCategoryClick(uiData[0]?.category_id);
 };
 
-const handleCategoryClick = async (id = "1000") => {
+const handleCategoryClick = async (id) => {
   const response = await fetch(
     `https://openapi.programming-hero.com/api/videos/category/${id}`
   );
   const uiData = (await response.json()).data;
-
 
   const cardContainer = document.getElementById("card-container");
   cardContainer.innerHTML = "";
@@ -42,25 +43,35 @@ const handleCategoryClick = async (id = "1000") => {
             <figure class="rounded relative w-80 h-48"><img class="h-full w-full" src="${
               video.thumbnail
             }" alt="image" />
-                <span class="${video?.others?.posted_date? "" : 'hidden'} countdown bg-gray-900 text-white text-sm absolute z-50 bottom-3 right-3">
+                <span class="${
+                  video?.others?.posted_date ? '' : 'hidden'
+                } countdown bg-gray-900 text-white text-sm absolute z-50 bottom-3 right-3">
                 ${timeClock(video?.others?.posted_date)}
                 </span>
             </figure>
-            <div class="card-body">
+            <div class="flex flex-row">
+              <div class="avatar">
+                <div class="w-10 h-10 rounded-full ml-4 mt-5">
+                  <img src="${video?.authors[0]?.profile_picture}" />
+                </div>
+              </div>
+              <div class="card-body">
                 <h2 class="card-title">${video.title}</h2>
                 <p>${
                   video?.authors[0]?.profile_name || "No Data"
                 } <span class="inline-flex justify-center align-middle">
                     <img class="${
-                      video?.authors[0]?.verified ? "" : "hidden"
+                      video?.authors[0]?.verified ? '' : 'hidden'
                     }" src="./image/verified.svg" alt="">
                     </span></p>
                 <div class="card-actions justify-end">
                     <p><span>${
                       video?.others?.views ? video?.others?.views : "No View"
                     }</span> views</p>
-                </div>
+              </div>
+              </div>
             </div>
+            
         </div>
             `;
     cardContainer.appendChild(card);
@@ -89,14 +100,17 @@ const handleSort = () => {
 const handleBlog = () => {
   window.location.href = "./blog.html";
 };
+
 const handleVideo = () => {
-    console.log("video")
   window.location.href = "./index.html";
 };
-function timeClock(sec) {
-    const hours = Math.floor(sec / 3600);
-    const minutes = Math.floor((sec - hours * 3600) / 60);
-    return `${hours}hrs ${minutes}min ago`;
-  }
+
+const timeClock=(sec) => {
+  const hours = Math.floor(sec / 3600);
+  const minutes = Math.floor((sec - hours * 3600) / 60);
+  return `${hours}hrs ${minutes}min ago`;
+}
+
+
 handleCategory();
-handleCategoryClick();
+// handleCategoryClick();
